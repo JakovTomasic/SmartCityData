@@ -108,7 +108,12 @@ public class ActivityDataUpdater {
     private static void updateCameraActivityData(Activity activity, int stationListIndex) throws Exception {
         ListView cameraDataListView = activity.findViewById(R.id.camera_data_list_view);
 
-        cameraDataListView.setAdapter(new CameraDataAdapter(activity, AppData.cameras.get(stationListIndex)));
+        // Assign new adapter only if it haven't been assigned (don't refresh list view every couple of seconds)
+        if(CameraActivity.cameraDataAdapter == null) { // TODO: || number of data has been changed, maybe already done on dataset change
+            CameraActivity.cameraDataAdapter = new CameraDataAdapter(activity, AppData.cameras.get(stationListIndex));
+            cameraDataListView.setAdapter(CameraActivity.cameraDataAdapter);
+        }
+
     }
 
     // Set "no data" warning visibility depending on if there is data or not

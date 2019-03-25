@@ -1,5 +1,7 @@
 package com.sser.smartcity.smartcitydata.data;
 
+import com.sser.smartcity.smartcitydata.activities.CameraActivity;
+
 import java.util.ArrayList;
 
 // Class for storing one camera data
@@ -45,14 +47,17 @@ public class Camera {
 
     public void addPlate(String plate) {
         this.plates.add(plate);
+        notifyCameraDataAdapter();
     }
 
     public void setPlate(int index, String plate) {
         this.plates.set(index, plate);
+        notifyCameraDataAdapter();
     }
 
     public void clearPlats() {
         this.plates.clear();
+        notifyCameraDataAdapter();
     }
 
 
@@ -62,13 +67,36 @@ public class Camera {
 
     public void addTime(String time) {
         this.times.add(time.replace("T", " "));
+        notifyCameraDataAdapter();
     }
 
     public void setTime(int index, String time) {
         this.times.set(index, time);
+        notifyCameraDataAdapter();
     }
 
     public void clearTimes() {
         this.times.clear();
+        notifyCameraDataAdapter();
+    }
+
+
+    // TODO: make this process smarter (look only for current camera's JSON feed)
+    // Notify camera data adapter (from UI thread) that camera data has been changed (crash bug fix)
+    private static void notifyCameraDataAdapter() {
+        try {
+            AppData.currentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        CameraActivity.cameraDataAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

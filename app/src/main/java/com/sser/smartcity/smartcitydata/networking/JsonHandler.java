@@ -112,12 +112,21 @@ public class JsonHandler {
 
             JSONArray feeds = jsonObject.getJSONArray("feeds");
 
-            // reset all cameras' (only one for now) time and plates for adding new ones later
-            try {
-                // TODO: this is not good
-                AppData.cameras.get(0).clearPlats();
-                AppData.cameras.get(0).clearTimes();
-            } catch (Exception ignored) {}
+
+            if(channel == 3) {
+                // If this is camera channel and there is no new camera data, don't save new data
+                if(!AppData.cameras.isEmpty() && AppData.cameras.get(0) != null &&
+                        AppData.cameras.get(0).getAllPlates().size() == feeds.length()) {
+                    return;
+                }
+
+                // reset all cameras' (only one for now) time and plates for adding new ones later
+                try {
+                    AppData.cameras.get(0).clearPlats();
+                    AppData.cameras.get(0).clearTimes();
+                } catch (Exception ignored) {}
+            }
+
 
             for(int i = 0; i < feeds.length(); i++) {
                 JSONObject obj2 = feeds.getJSONObject(i);

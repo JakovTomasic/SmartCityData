@@ -1,5 +1,6 @@
 package com.sser.smartcity.smartcitydata.data;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 
@@ -11,6 +12,11 @@ import java.util.ArrayList;
 
 // Stores global application data
 public class AppData {
+
+    // Current activity for accessing it from static methods, must be accessed in try-catch block in case that activity is closed
+    @SuppressLint("StaticFieldLeak")
+    static Activity currentActivity;
+
 
     // Unique index for each category for knowing witch has been opened
     public static final int noCategoryTypeDefaultIndex = 0;
@@ -70,6 +76,10 @@ public class AppData {
 
     // Handle resuming activity (activities have lot of same operations)
     public static void resumeActivity(Activity activity, int stationListIndex) {
+        // Store current activity for accessing it later
+        currentActivity = activity;
+
+
         // Setup layout for showing "no internet connection" warning
         ActivityDataUpdater.setNetworkState(activity);
         // Setup layout for showing loading progress bar

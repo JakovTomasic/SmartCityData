@@ -9,16 +9,14 @@ import android.view.View;
 import com.sser.smartcity.smartcitydata.CameraDataAdapter;
 import com.sser.smartcity.smartcitydata.R;
 import com.sser.smartcity.smartcitydata.data.AppData;
-import com.sser.smartcity.smartcitydata.data.Camera;
 import com.sser.smartcity.smartcitydata.networking.UpdateDataHandler;
-
-import java.util.ArrayList;
 
 // Activity for showing all data of selected camera
 public class CameraActivity extends AppCompatActivity {
 
 
-    public static ArrayList<Camera> cameras = new ArrayList<>();
+    // Adapter for all camera's data, for notifying it on data change
+    public static CameraDataAdapter cameraDataAdapter = null;
 
 
     @Override
@@ -39,6 +37,9 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // When activity is paused and resumed, refresh adapter
+        cameraDataAdapter = null;
 
         // Handle resuming activity (activities have lot of same operations)
         AppData.resumeActivity(this, AppData.lastClickedStationListIndex);

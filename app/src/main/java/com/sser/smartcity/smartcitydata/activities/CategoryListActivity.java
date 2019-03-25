@@ -20,6 +20,8 @@ import com.sser.smartcity.smartcitydata.networking.UpdateDataHandler;
 // Activity for seeing all stations if each category (user can then open each station and see it's data)
 public class CategoryListActivity extends AppCompatActivity {
 
+    // TODO: add google maps intent button
+
     // Log tag for log messages
     private static final String LOG_TAG = CategoryListActivity.class.getName();
 
@@ -34,7 +36,7 @@ public class CategoryListActivity extends AppCompatActivity {
         // Declare layout variables
         categoryDataListView = findViewById(R.id.category_list_view);
 
-        // TODO: when new data is gotten, this will not refresh
+        // TODO: when we get new data, this will not refresh
 
         // Depending on witch category is opened, declare list view adapters and sets activity title
         switch (AppData.lastClickedCategoryTypeIndex) {

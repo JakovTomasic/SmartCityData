@@ -13,16 +13,41 @@
         android:roundIcon="@drawable/smart_city_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.CameraActivity"></activity>
-        <activity android:name=".activities.ParkingActivity" />
-        <activity android:name=".activities.MeteorologicalStationActivity" />
-        <activity android:name=".activities.CategoryListActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.CameraActivity"
+            android:parentActivityName=".activities.CategoryListActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.CategoryListActivity" />
+        </activity>
+        <activity android:name=".activities.ParkingActivity"
+            android:parentActivityName=".activities.CategoryListActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.CategoryListActivity" />
+        </activity>
+        <activity android:name=".activities.MeteorologicalStationActivity"
+            android:parentActivityName=".activities.CategoryListActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.CategoryListActivity" />
+        </activity>
+        <activity android:name=".activities.CategoryListActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
         </activity>
     </application>
 
