@@ -1,15 +1,20 @@
 package com.sser.smartcity.smartcitydata.data;
 
+// Class for storing one meteorological station data
 public class MeteorologicalStation {
 
+    // Unique id of a station
     private int id;
 
+    // Data each station stores
     private Double airTemperature, airHumidity, airQuality, co2Level, coLevel;
     private Boolean dangerousGases;
 
+    // Constructor
     public MeteorologicalStation(int id) {
         this.id = id;
 
+        // Initialize to null
         airTemperature = null;
         airHumidity = null;
         airQuality = null;
@@ -20,7 +25,7 @@ public class MeteorologicalStation {
 
 
     /*
-     * Getters and setters
+     * Public getters and setters
      */
 
     public int getId() {

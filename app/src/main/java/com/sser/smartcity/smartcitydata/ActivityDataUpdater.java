@@ -17,29 +17,47 @@ import com.sser.smartcity.smartcitydata.networking.NetworkManager;
 
 import java.util.ArrayList;
 
+// Handles common activity UI refreshing stuff
 public class ActivityDataUpdater {
 
-    // TODO: divide this to two methods
-    public static void setNetworkStateAndLoadingProgressBar(Activity activity) {
+    // Try to set visibility of "no internet connection" warning
+    public static void setNetworkState(Activity activity) {
         try {
-            ProgressBar loadingDataProgressBar = activity.findViewById(R.id.progress);
             View noInternetConnectionTV = activity.findViewById(R.id.no_internet_connection_TV);
 
-            loadingDataProgressBar.setVisibility(View.GONE);
-            noInternetConnectionTV.setVisibility(View.GONE);
-
             if(NetworkManager.checkNetworkState(activity)) {
-                if(AppData.dataNeedsRefresh) loadingDataProgressBar.setVisibility(View.VISIBLE);
-            } else { // If not, display error watermark, do not start loading
+                // If there is internet connection, hide this warning
+                noInternetConnectionTV.setVisibility(View.GONE);
+            } else {
+                // Otherwise, show it
                 noInternetConnectionTV.setVisibility(View.VISIBLE);
             }
         } catch (Exception ignored) {}
     }
 
+    // Try to set visibility of loading progress bar
+    public static void setLoadingProgressBar(Activity activity) {
+        try {
+            ProgressBar loadingDataProgressBar = activity.findViewById(R.id.progress);
+
+            if(NetworkManager.checkNetworkState(activity) && AppData.dataNeedsRefresh) {
+                // If there is internet connection and data needs to be gotten, display loading progress bar
+                loadingDataProgressBar.setVisibility(View.VISIBLE);
+            } else {
+                // Otherwise, hide it
+                loadingDataProgressBar.setVisibility(View.GONE);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    // Refresh activity layout
     public static void updateActivityData(Activity activity, int stationListIndex) throws Exception {
-        setNetworkStateAndLoadingProgressBar(activity);
+        // This is valid for all activities
+        setNetworkState(activity);
+        setLoadingProgressBar(activity);
         setNoDataWarning(activity);
 
+        // Refresh activity specific data
         if(activity instanceof MeteorologicalStationActivity) {
             updateMeteorologicalStationActivityData(activity, stationListIndex);
         } else if(activity instanceof ParkingActivity) {
@@ -49,6 +67,7 @@ public class ActivityDataUpdater {
         }
     }
 
+    // Refresh data for clicked meteorological station
     @SuppressLint("SetTextI18n")
     private static void updateMeteorologicalStationActivityData(Activity activity, int stationListIndex) throws Exception {
         TextView airTemperatureTV = activity.findViewById(R.id.air_temperature);
@@ -70,6 +89,7 @@ public class ActivityDataUpdater {
 
     }
 
+    // Refresh data for clicked parking
     private static void updateParkingActivityData(Activity activity, int stationListIndex) throws Exception {
         ArrayList<ImageView> imageViews = new ArrayList<>();
 
@@ -84,18 +104,21 @@ public class ActivityDataUpdater {
 
     }
 
+    // Refresh data for clicked camera
     private static void updateCameraActivityData(Activity activity, int stationListIndex) throws Exception {
         ListView cameraDataListView = activity.findViewById(R.id.camera_data_list_view);
 
         cameraDataListView.setAdapter(new CameraDataAdapter(activity, AppData.cameras.get(stationListIndex)));
     }
 
-    public static void setNoDataWarning(Activity activity) {
+    // Set "no data" warning visibility depending on if there is data or not
+    private static void setNoDataWarning(Activity activity) {
         try {
             View noDataWarningView = activity.findViewById(R.id.no_data_indicator_layout);
 
             boolean showWarning = false;
 
+            // For this activities, first check if there is data, for others just show "no data"
             switch (AppData.lastClickedCategoryTypeIndex) {
                 case AppData.meteorologicalStationCategoryTypeIndex:
                     if(AppData.meteorologicalStations.isEmpty()) {
@@ -113,6 +136,7 @@ public class ActivityDataUpdater {
                     }
                     break;
                 case AppData.noCategoryTypeDefaultIndex:
+                    // In main activity don't show "no data" warning
                     break;
                 default:
                     showWarning = true;

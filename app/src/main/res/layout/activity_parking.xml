@@ -34,30 +34,15 @@
 
         <ImageView
             android:id="@+id/parking_spot_1"
-            android:layout_width="@dimen/parking_spot_size"
-            android:layout_height="@dimen/parking_spot_size"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/parking_spot_padding"
-            android:src="@drawable/ic_local_parking"
-            android:background="@drawable/ic_parking_available"/>
+            style="@style/ParkingSpotImageViewStyle"/>
 
         <ImageView
             android:id="@+id/parking_spot_2"
-            android:layout_width="@dimen/parking_spot_size"
-            android:layout_height="@dimen/parking_spot_size"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/parking_spot_padding"
-            android:src="@drawable/ic_local_parking"
-            android:background="@drawable/ic_parking_available"/>
+            style="@style/ParkingSpotImageViewStyle"/>
 
         <ImageView
             android:id="@+id/parking_spot_3"
-            android:layout_width="@dimen/parking_spot_size"
-            android:layout_height="@dimen/parking_spot_size"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/parking_spot_padding"
-            android:src="@drawable/ic_local_parking"
-            android:background="@drawable/ic_parking_available"/>
+            style="@style/ParkingSpotImageViewStyle"/>
 
     </LinearLayout>
 

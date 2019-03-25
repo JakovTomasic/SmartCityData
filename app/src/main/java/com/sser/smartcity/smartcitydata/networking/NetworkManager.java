@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+// For handling network things
 public class NetworkManager {
 
     private static final String LOG_TAG = NetworkManager.class.getName();
@@ -26,12 +27,7 @@ public class NetworkManager {
         }
 
         // If there is a network connection, fetch data
-        if(networkInfo != null && networkInfo.isConnected()) {
-            return true;
-        } else {
-            // Otherwise, display error
-            return false;
-        }
+        return (networkInfo != null && networkInfo.isConnected());
 
     }
 

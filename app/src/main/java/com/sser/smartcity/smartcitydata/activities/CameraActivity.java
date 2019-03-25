@@ -6,20 +6,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.sser.smartcity.smartcitydata.ActivityDataUpdater;
+import com.sser.smartcity.smartcitydata.CameraDataAdapter;
 import com.sser.smartcity.smartcitydata.R;
 import com.sser.smartcity.smartcitydata.data.AppData;
+import com.sser.smartcity.smartcitydata.data.Camera;
 import com.sser.smartcity.smartcitydata.networking.UpdateDataHandler;
 
+import java.util.ArrayList;
+
+// Activity for showing all data of selected camera
 public class CameraActivity extends AppCompatActivity {
+
+
+    public static ArrayList<Camera> cameras = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        // For title, set opened camera name
         setTitle(R.string.only_camera_name);
 
+        // Show back (up) button in the menu
         try {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -30,29 +40,28 @@ public class CameraActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-
-        try {
-            ActivityDataUpdater.updateActivityData(this, AppData.lastClickedStationListIndex);
-        } catch (Exception ignored) {}
-
-        UpdateDataHandler.startUpdatingData(this);
+        // Handle resuming activity (activities have lot of same operations)
+        AppData.resumeActivity(this, AppData.lastClickedStationListIndex);
 
     }
 
+    // Attach custom options menu on the activity (for the refresh button)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Create menu base on main_menu layout
         getMenuInflater().inflate(R.menu.refresh_menu, menu);
         return true;
     }
 
+    // Handle click on each of the options menu buttons (items)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refresh_option:
+            case R.id.refresh_option: // Refresh button
+                // Show loading progress bar
                 View loadingProgressBar = findViewById(R.id.progress);
                 loadingProgressBar.setVisibility(View.VISIBLE);
 
+                // Update data from the internet
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -60,7 +69,7 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 }).start();
                 return true;
-            case android.R.id.home:
+            case android.R.id.home: // Back button
                 this.finish();
                 return true;
         }

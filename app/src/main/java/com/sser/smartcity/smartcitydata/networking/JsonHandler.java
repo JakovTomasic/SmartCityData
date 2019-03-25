@@ -20,6 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+
+// For handling JSON things
 public class JsonHandler {
 
     private static final String LOG_TAG = JsonHandler.class.getName();
@@ -37,9 +39,7 @@ public class JsonHandler {
         return uriBuilder.toString();
     }
 
-    /**
-     * Make an HTTP request to the given URL and return a String as the response.
-     */
+    // Make an HTTP request to the given URL and return a String as the response.
     static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
@@ -63,7 +63,7 @@ public class JsonHandler {
             else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(LOG_TAG, "Problem retrieving a JSON results.", e);
         } finally {
             if(urlConnection != null) {
@@ -78,11 +78,8 @@ public class JsonHandler {
     }
 
 
-    /**
-     * Convert the {@link InputStream} into a String which contains the
-     * whole JSON response from the server.
-     */
-    private static String readFromStream(InputStream inputStream) throws IOException{
+    // Convert the InputStream into a String which contains the whole JSON response from the server.
+    private static String readFromStream(InputStream inputStream) throws Exception{
         StringBuilder output = new StringBuilder();
         if(inputStream != null) {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
@@ -100,7 +97,6 @@ public class JsonHandler {
 
     // Saves data from JSON
     static void extractFeatureFromJson(String stationJson, int channel) {
-//        Log.e(LOG_TAG, stationJson);
 
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(stationJson)) {
@@ -116,8 +112,12 @@ public class JsonHandler {
 
             JSONArray feeds = jsonObject.getJSONArray("feeds");
 
-            AppData.cameras.clear();
-            AppData.cameras.add(new Camera(555));
+            // reset all cameras' (only one for now) time and plates for adding new ones later
+            try {
+                // TODO: this is not good
+                AppData.cameras.get(0).clearPlats();
+                AppData.cameras.get(0).clearTimes();
+            } catch (Exception ignored) {}
 
             for(int i = 0; i < feeds.length(); i++) {
                 JSONObject obj2 = feeds.getJSONObject(i);
@@ -160,7 +160,7 @@ public class JsonHandler {
         Integer idInVector = null;
 
         // Loop through all stations and check if station with same ID exist
-        for(int j = 0; j < AppData.meteorologicalStations.size(); j++) { // TODO: optimize, implement DB
+        for(int j = 0; j < AppData.meteorologicalStations.size(); j++) {
             if(AppData.meteorologicalStations.get(j).getId() == tempId) {
                 idInVector = j;
                 break;
@@ -169,13 +169,15 @@ public class JsonHandler {
 
         MeteorologicalStation tempMeteorologicalStation;
 
-        // If Stanica with same ID doesn't exist create new one
         if(idInVector == null) {
+            // If station with same ID doesn't exist create new one
             tempMeteorologicalStation = new MeteorologicalStation(tempId);
-        } else { // If it exist change it's data
+        } else {
+            // If it exist change it's data
             tempMeteorologicalStation = AppData.meteorologicalStations.get(idInVector);
         }
 
+        // Try to get each data from JSON
         try {
             tempMeteorologicalStation.setAirTemperature(Double.parseDouble(jsonObject.getString("field2")));
         } catch (Exception ignored) {}
@@ -196,6 +198,7 @@ public class JsonHandler {
         } catch (Exception ignored) {}
 
 
+        // If station with same ID doesn't exist add it into the list
         if(idInVector == null) {
             AppData.meteorologicalStations.add(tempMeteorologicalStation);
         }
@@ -206,11 +209,14 @@ public class JsonHandler {
     private static void doChannel2(JSONObject obj2) {
         Parking tempParking;
         if(AppData.parkings.isEmpty()) {
+            // If parking with same ID doesn't exist create new one
             tempParking = new Parking(444, 3); // 444 is temp code for parking station
         } else {
+            // If it exist change it's data
             tempParking = AppData.parkings.get(0);
         }
 
+        // Try to get each data from JSON
         try {
             tempParking.getParkingSpot(0).setAvailable(Integer.parseInt(obj2.getString("field1")) == 0);
         } catch (Exception ignored) {}
@@ -222,6 +228,7 @@ public class JsonHandler {
         } catch (Exception ignored) {}
 
 
+        // If parking with same ID doesn't exist add it into the list
         if(AppData.parkings.isEmpty()) {
             AppData.parkings.add(tempParking);
         }
@@ -232,11 +239,14 @@ public class JsonHandler {
     private static void doChannel3(JSONObject obj2) {
         Camera tempCamera;
         if(AppData.cameras.isEmpty()) {
+            // If camera with same ID doesn't exist create new one
             tempCamera = new Camera(555); // 555 is temp code for camera
         } else {
+            // If it exist change it's data
             tempCamera = AppData.cameras.get(0);
         }
 
+        // Try to get each data from JSON
         try {
             tempCamera.addTime(obj2.getString("created_at"));
         } catch (Exception ignored) {}
@@ -245,6 +255,7 @@ public class JsonHandler {
         } catch (Exception ignored) {}
 
 
+        // If camera with same ID doesn't exist add it into the list
         if(AppData.cameras.isEmpty()) {
             AppData.cameras.add(tempCamera);
         }

@@ -2,20 +2,30 @@ package com.sser.smartcity.smartcitydata.data;
 
 import java.util.ArrayList;
 
+// Class for storing one camera data
 public class Camera {
 
+    // Unique id of a camera
     private int id;
 
+    // List of car plates camera has seen
     private ArrayList<String> plates;
+    // List of times camera has seen this plates (must be equally long)
     private ArrayList<String> times;
 
+    // Constructor
     public Camera(int id) {
         this.id = id;
 
+        // Create new ArrayLists
         plates = new ArrayList<>();
         times = new ArrayList<>();
     }
 
+
+    /*
+     * Public get/set methods (and add and clear methods)
+     */
 
     public int getId() {
         return id;
@@ -41,6 +51,11 @@ public class Camera {
         this.plates.set(index, plate);
     }
 
+    public void clearPlats() {
+        this.plates.clear();
+    }
+
+
     public String getTime(int index) {
         return times.get(index);
     }
@@ -51,5 +66,9 @@ public class Camera {
 
     public void setTime(int index, String time) {
         this.times.set(index, time);
+    }
+
+    public void clearTimes() {
+        this.times.clear();
     }
 }

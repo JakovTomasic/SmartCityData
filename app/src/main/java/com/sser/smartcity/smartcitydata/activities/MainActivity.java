@@ -7,14 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.sser.smartcity.smartcitydata.ActivityDataUpdater;
 import com.sser.smartcity.smartcitydata.R;
 import com.sser.smartcity.smartcitydata.data.AppData;
 import com.sser.smartcity.smartcitydata.networking.UpdateDataHandler;
 
+// Main/first activity, user can choose category to see it's data
 public class MainActivity extends AppCompatActivity {
-
-    // TODO: test all without internet connection
 
     // Clickable views for opening each category
     View meteorologicalStationClickableView, streetLightClickableView,
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         parkingClickableView = findViewById(R.id.parking);
         parkingTicketClickableView = findViewById(R.id.parking_ticket);
 
-
+        // Set on click listeners (open CategoryListActivity and store witch category has been clicked on)
         meteorologicalStationClickableView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,31 +73,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        // Last clicked category does not exist (MainActivity is not an category)
         AppData.lastClickedCategoryTypeIndex = AppData.noCategoryTypeDefaultIndex;
 
 
-        ActivityDataUpdater.setNetworkStateAndLoadingProgressBar(this);
-
-        // TODO: set this to all resume methods
-        UpdateDataHandler.startUpdatingData(this);
+        // Handle resuming activity (activities have lot of same operations)
+        AppData.resumeActivity(this, -1);
 
     }
 
+    // Attach custom options menu on the activity (for the refresh button)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Create menu base on main_menu layout
         getMenuInflater().inflate(R.menu.refresh_menu, menu);
         return true;
     }
 
+    // Handle click on each of the options menu buttons (items)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refresh_option:
+            case R.id.refresh_option: // Refresh button
+                // Show loading progress bar
                 View loadingProgressBar = findViewById(R.id.progress);
                 loadingProgressBar.setVisibility(View.VISIBLE);
 
-
+                // Update data from the internet
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    // Open CategoryListActivity for showing more details of an selected category
     private void openCategoryListActivity() {
         Intent intent = new Intent(MainActivity.this, CategoryListActivity.class);
         startActivity(intent);

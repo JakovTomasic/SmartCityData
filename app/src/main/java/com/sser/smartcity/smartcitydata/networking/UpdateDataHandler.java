@@ -10,14 +10,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+// Interface got getting data from the internet
 public class UpdateDataHandler {
 
     private static final String LOG_TAG = UpdateDataHandler.class.getName();
 
 
-    private static Thread updateThread;
-    private static boolean isUpdaterLooping = false;
+    // Thread on witch data is periodically refreshing
+    private static Thread updateThread = null;
 
+    // Just get new data from the internet (and update UI afterwards)
     public static void updateData(final Activity activity) {
         for(int channel = 1; channel <= AppData.numberOfThingSpeakChannels; channel++) {
             // Create URL object
@@ -55,13 +57,14 @@ public class UpdateDataHandler {
             JsonHandler.extractFeatureFromJson(jsonResponse, channel);
         }
 
+        // Data doesn't need to refresh anymore
         AppData.dataNeedsRefresh = false;
 
+        // Try to update UI
         try {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ActivityDataUpdater.setNoDataWarning(activity);
                     try {
                         ActivityDataUpdater.updateActivityData(activity, AppData.lastClickedStationListIndex);
                     } catch (Exception ignored) {}
@@ -71,33 +74,30 @@ public class UpdateDataHandler {
 
     }
 
+    // Start periodically checking for new data (running in the background)
     public static void startUpdatingData(final Activity activity) {
-        if(isUpdaterLooping) {
-            return;
-        }
-
+        // If thread is already running, stop id
         try {
             updateThread.interrupt();
             updateThread = null;
         } catch (Exception ignored) {}
 
+        // Start checking and assign this thread to the updateThread
         updateThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    isUpdaterLooping = true;
                     while(true) {
                         updateData(activity);
 
                         try {
                             Thread.sleep(5000);
                         } catch (Exception e) {
-                            isUpdaterLooping = false;
+                            // Exception is thrown when thread is interrupted, in that case, exit infinity loop
                             return;
                         }
                     }
                 } catch (Exception ignored) {}
-                isUpdaterLooping = false;
             }
         });
         updateThread.start();

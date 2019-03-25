@@ -8,6 +8,7 @@
 
     <dimen name="parking_spot_size">200dp</dimen>
     <dimen name="parking_spot_padding">30dp</dimen>
+    <dimen name="parking_spot_padding_left">40dp</dimen>
 
 
     <dimen name="camera_text_view_padding">4dp</dimen>
