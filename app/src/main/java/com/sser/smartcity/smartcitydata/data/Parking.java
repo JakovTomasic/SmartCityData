@@ -24,6 +24,29 @@ public class Parking {
     }
 
 
+    // Returns total number of parking spots
+    public int getNumberOfParkingSpots() {
+        if(parkingSpots == null) {
+            return 0;
+        }
+        return parkingSpots.size();
+    }
+
+    // Returns number of available parking spots (just count them)
+    public int getAvailableParkingSpotsCount() {
+        if(parkingSpots == null) {
+            return 0;
+        }
+        int counter = 0;
+        for (ParkingSpot ps : parkingSpots) {
+            if(ps.isAvailable()) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+
     /*
      * Public getters and setters (and add method)
      */

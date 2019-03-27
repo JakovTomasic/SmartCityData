@@ -15,7 +15,7 @@ public class AppData {
 
     // Current activity for accessing it from static methods, must be accessed in try-catch block in case that activity is closed
     @SuppressLint("StaticFieldLeak")
-    static Activity currentActivity;
+    public static Activity currentActivity;
 
 
     // Unique index for each category for knowing witch has been opened

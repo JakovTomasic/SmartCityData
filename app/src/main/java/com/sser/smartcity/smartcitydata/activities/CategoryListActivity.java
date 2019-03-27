@@ -1,13 +1,11 @@
 package com.sser.smartcity.smartcitydata.activities;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.sser.smartcity.smartcitydata.CategoryListAdapters.CamerasAdapter;
@@ -19,8 +17,6 @@ import com.sser.smartcity.smartcitydata.networking.UpdateDataHandler;
 
 // Activity for seeing all stations if each category (user can then open each station and see it's data)
 public class CategoryListActivity extends AppCompatActivity {
-
-    // TODO: add google maps intent button
 
     // Log tag for log messages
     private static final String LOG_TAG = CategoryListActivity.class.getName();
@@ -36,7 +32,7 @@ public class CategoryListActivity extends AppCompatActivity {
         // Declare layout variables
         categoryDataListView = findViewById(R.id.category_list_view);
 
-        // TODO: when we get new data, this will not refresh
+        // TODO: when we get new data, this list will not refresh
 
         // Depending on witch category is opened, declare list view adapters and sets activity title
         switch (AppData.lastClickedCategoryTypeIndex) {
@@ -46,18 +42,6 @@ public class CategoryListActivity extends AppCompatActivity {
                 // Set new adapter
                 categoryDataListView.setAdapter(new MeteorologicalStationAdapter(this, AppData.meteorologicalStations));
 
-                // When each station is clicked, open activity with all of it's data
-                categoryDataListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        // Remember what station was clicked on (for getting it's data later)
-                        AppData.lastClickedStationListIndex = i;
-
-                        // Open activity with all data
-                        Intent intent = new Intent(CategoryListActivity.this, MeteorologicalStationActivity.class);
-                        startActivity(intent);
-                    }
-                });
                 break;
             case AppData.streetLightCategoryTypeIndex: // Street light category, for now there is no data for this category
                 setTitle(R.string.street_light);
@@ -68,18 +52,6 @@ public class CategoryListActivity extends AppCompatActivity {
                 // Set new adapter
                 categoryDataListView.setAdapter(new CamerasAdapter(this, AppData.cameras));
 
-                // When each camera is clicked, open activity with all of it's data
-                categoryDataListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        // Remember what camera was clicked on (for getting it's data later)
-                        AppData.lastClickedStationListIndex = i;
-
-                        // Open activity with all data
-                        Intent intent = new Intent(CategoryListActivity.this, CameraActivity.class);
-                        startActivity(intent);
-                    }
-                });
                 break;
             case AppData.parkingCategoryTypeIndex: // Parking category
                 setTitle(R.string.parking);
@@ -87,18 +59,6 @@ public class CategoryListActivity extends AppCompatActivity {
                 // Set new adapter
                 categoryDataListView.setAdapter(new ParkingAdapter(this, AppData.parkings));
 
-                // When each parking is clicked, open activity with all of it's data
-                categoryDataListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        // Remember what parking was clicked on (for getting it's data later)
-                        AppData.lastClickedStationListIndex = i;
-
-                        // Open activity with all data
-                        Intent intent = new Intent(CategoryListActivity.this, ParkingActivity.class);
-                        startActivity(intent);
-                    }
-                });
                 break;
             case AppData.parkingTicketCategoryTypeIndex: // Parking ticket category, for now there is no data for this category
                 setTitle(R.string.parking_ticket);

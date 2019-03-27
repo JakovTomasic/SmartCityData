@@ -91,7 +91,7 @@ public class UpdateDataHandler {
                         updateData(activity);
 
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(15000);
                         } catch (Exception e) {
                             // Exception is thrown when thread is interrupted, in that case, exit infinity loop
                             return;
